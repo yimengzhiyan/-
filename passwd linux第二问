@@ -1,0 +1,24 @@
+#!/bin/bash
+ 
+letters=$(echo {A..Z} | tr ' ' '\n' | shuf | sort | tr -d '\n')
+ 
+matched=$(echo ${letters} | fold -w 1 | shuf | paste -sd '' - | tr -d '\n')
+echo "The parameters of the machine are as follows"
+echo "The five rotors are:"
+prev_matched=$matched
+for i in {1..5}; do
+  echo -n "${letters} ${matched}"
+ 
+  new_char=$(openssl rand -base64 1000 | tr -dc 'A-Z' | fold -w 1 | head -n 1)
+  echo -n "  ${new_char}"
+ 
+  echo
+ 
+  while [[ "$matched" == "$prev_matched" ]]; do
+    matched=$(echo ${letters} | fold -w 1 | shuf | paste -sd '' -)
+  done
+ 
+  prev_matched=$matched
+done
+  echo The "reflection disc is: BMRANICGEQXKV TUOWYPDHJSZFL"
+
